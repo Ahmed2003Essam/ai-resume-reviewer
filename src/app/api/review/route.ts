@@ -2,10 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { resumeReviewPrompt } from "@/lib/prompts";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
@@ -17,6 +13,17 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
+
+        const apiKey = process.env.OPENAI_API_KEY;
+
+        if (!apiKey) {
+            return NextResponse.json(
+                { error: "Missing OpenAI API key." },
+                { status: 500 }
+            );
+        }
+
+        const openai = new OpenAI({ apiKey });
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4o-mini",
