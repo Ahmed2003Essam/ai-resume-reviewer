@@ -1,36 +1,284 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Resume Reviewer
 
-## Getting Started
+AI Resume Reviewer is a full-stack AI-powered web application that analyzes resumes, evaluates resume quality, provides ATS-style scoring, generates targeted improvement suggestions, and compares resumes against job descriptions and target roles.
 
-First, run the development server:
+The application allows users to upload PDF or DOCX resumes and receive structured AI-generated feedback including:
+
+* Overall resume scoring
+* Category-based evaluation
+* Position-specific analysis
+* ATS-style job matching
+* Resume bullet improvements
+* Missing skills and keyword analysis
+* Role-targeted recommendations
+
+The project was designed to simulate features commonly found in modern resume optimization and applicant tracking system (ATS) platforms while showcasing full-stack AI integration using modern web technologies.
+
+---
+
+# Live Demo
+
+[Live Application](https://ai-resume-reviewer-dusky.vercel.app/)
+
+---
+
+# Features
+
+## Resume Upload
+
+* Upload resumes in PDF or DOCX format
+* Drag-and-drop upload interface
+* Animated upload and parsing states
+* Automatic text extraction
+
+## AI Resume Analysis
+
+* Overall resume scoring (0–100)
+* Category-based scoring system
+* Position-specific feedback
+* Improved bullet point generation
+* Resume clarity and formatting evaluation
+
+## ATS-Style Job Matching
+
+* Match score against job descriptions
+* Missing keyword detection
+* Strong skill alignment analysis
+* Target role evaluation
+
+## Role Targeting
+
+Supports multiple career targets including:
+
+* Software Engineer
+* Data Analyst
+* Data Scientist
+* Machine Learning Engineer
+* Cybersecurity Analyst
+* Product Manager
+* IT Support Specialist
+* Custom user-defined roles
+
+## Modern UI/UX
+
+* Responsive design
+* Drag-and-drop uploads
+* Dynamic score bars
+* Copy-to-clipboard functionality
+* Clean dashboard layout
+* Real-time feedback display
+
+---
+
+# Technologies Used
+
+## Frontend
+
+* Next.js 16
+* React
+* TypeScript
+* Tailwind CSS
+
+## Backend
+
+* Next.js API Routes
+* OpenAI API
+
+## File Parsing
+
+* pdfreader
+* mammoth
+
+## Deployment
+
+* Vercel
+
+## Development Tools
+
+* Git
+* GitHub
+* VS Code
+* npm
+
+---
+
+# How It Works
+
+## 1. Resume Upload
+
+The user uploads a PDF or DOCX resume using the drag-and-drop interface.
+
+## 2. Resume Parsing
+
+The backend extracts text from the uploaded file:
+
+* PDF files are parsed using `pdfreader`
+* DOCX files are parsed using `mammoth`
+
+## 3. AI Processing
+
+The extracted resume text is sent to the OpenAI API along with:
+
+* Optional job description
+* Selected target role
+
+The AI model analyzes:
+
+* Resume quality
+* Impact
+* Metrics
+* Relevance
+* Formatting
+* ATS compatibility
+* Position-specific content
+
+## 4. Structured JSON Response
+
+The OpenAI API returns structured JSON containing:
+
+* Overall score
+* Category evaluations
+* Match analysis
+* Position suggestions
+* Improved bullets
+
+## 5. Frontend Rendering
+
+The application dynamically renders:
+
+* Score bars
+* Feedback cards
+* Improved bullets
+* Copy buttons
+* Match analysis
+
+---
+
+# Scoring System
+
+The application evaluates resumes across multiple categories:
+
+| Category   | Description                                             |
+| ---------- | ------------------------------------------------------- |
+| Impact     | Measures demonstrated contributions and achievements    |
+| Clarity    | Evaluates readability and communication quality         |
+| Metrics    | Detects quantified achievements and measurable results  |
+| Relevance  | Measures alignment with target role and job description |
+| Formatting | Evaluates consistency and presentation                  |
+
+The overall score is calculated as the sum of all category scores.
+
+---
+
+# Project Structure
+
+```bash
+src/
+│
+├── app/
+│   ├── api/
+│   │   ├── parse/
+│   │   └── review/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── icon.png
+│
+├── lib/
+│   └── prompts.ts
+```
+
+---
+
+# Running Locally
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/Ahmed2003Essam/ai-resume-reviewer
+cd ai-resume-reviewer
+```
+
+## 2. Install Dependencies
+
+```bash
+npm install
+```
+
+## 3. Create Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+```
+
+## 4. Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+# Deployment
 
-To learn more about Next.js, take a look at the following resources:
+The application is deployed using Vercel.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy Steps
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push project to GitHub
+2. Import repository into Vercel
+3. Add environment variables:
 
-## Deploy on Vercel
+   * `OPENAI_API_KEY`
+4. Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Example Use Cases
+
+* Resume optimization for internships and jobs
+* ATS preparation
+* Role-specific resume targeting
+* Resume improvement suggestions
+* Skill gap analysis
+* Technical portfolio project
+
+---
+
+# Future Improvements
+
+Planned enhancements include:
+
+* User authentication
+* Saved review history
+* Resume export functionality
+* PDF report generation
+* Resume template generation
+* Inline resume editing
+* AI-generated cover letters
+* Multi-language support
+* Advanced ATS keyword analytics
+
+---
+
+# Purpose of the Project
+
+This project was created to explore:
+
+* Full-stack AI application development
+* Large language model integration
+* Resume and ATS optimization workflows
+* Modern React and Next.js development
+* AI-powered structured data generation
+* User-centered UI/UX design
+
+The project also demonstrates how AI can be integrated into practical career-focused tools that provide actionable feedback rather than generic text generation.
+
+---
