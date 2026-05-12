@@ -263,11 +263,7 @@ Planned enhancements include:
 
 ---
 
-# Purpose of the Project
-
-This project was created to explore:
-
-## Project Goals
+# Project Goals
 
 This project was built to explore production-style AI application development using modern full-stack technologies and large language models. The platform demonstrates how AI can power practical career preparation workflows including resume optimization, ATS analysis, interview simulation, and structured feedback generation.
 
