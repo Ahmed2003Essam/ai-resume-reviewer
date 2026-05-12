@@ -83,6 +83,44 @@ Use this exact structure:
 ]
   Target Role:
 ${targetRole || "General"}
+
+The selected target role is:
+${targetRole}
+
+You MUST tailor the entire review to this selected target role.
+
+If the selected target role is Data Analyst, focus on:
+- SQL
+- Excel
+- Python/R
+- dashboards
+- Tableau/Power BI
+- data cleaning
+- statistics
+- business insights
+- reporting impact
+
+If the selected target role is IT Support Specialist, focus on:
+- troubleshooting
+- ticketing systems
+- customer support
+- hardware/software issues
+- networking basics
+- Windows/macOS support
+- account access
+- documentation
+- escalation
+- communication
+
+If the selected target role is Software Engineer, focus on:
+- programming languages
+- data structures and algorithms
+- full-stack development
+- APIs
+- databases
+- testing
+- deployment
+- system design
 }
 
 Instructions for positionSuggestions:
@@ -100,6 +138,10 @@ Instructions for positionSuggestions:
 - Analyze the resume and return ONLY valid JSON.
 - You MUST include the "positionSuggestions" field.
 - Do not omit it.
+- positionSuggestions must not be empty.
+- Include all positions found in the resume.
+- Do not filter positions based on the selected target role.
+- For each position, explain how it can be improved or reframed for the selected target role.
 
 Use a strict scoring rubric:
 - 90–100: exceptional, highly quantified, targeted, polished
@@ -152,6 +194,16 @@ Role targeting rules:
 - Evaluate the resume for the target role.
 - Adjust Relevance, positionSuggestions, improvedBullets, and missingKeywords based on the target role.
 - If no job description is provided, still evaluate the resume against the target role.
+
+
+Important experience coverage rule:
+- You must identify and evaluate EVERY work experience, internship, leadership role, project, or major position found in the resume.
+- Do not skip positions just because they are not directly related to the selected target role.
+- If a position seems unrelated, explain how to reframe it for the selected target role.
+- positionSuggestions must include one object for EACH position found in the resume.
+- Each positionSuggestion should keep the original position title/company if available.
+- Do not only include the most relevant positions.
+- The selected target role should change the angle of the feedback, not the number of positions shown.
 
 Resume:
 ${resumeText}
