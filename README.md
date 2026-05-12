@@ -1,6 +1,8 @@
-# AI Resume Reviewer
+# AI Resume Reviewer & Mock Interview Platform
 
-AI Resume Reviewer is a full-stack AI-powered web application that analyzes resumes, evaluates resume quality, provides ATS-style scoring, generates targeted improvement suggestions, and compares resumes against job descriptions and target roles.
+AI Resume Reviewer & Mock Interview Platform is a full-stack AI-powered career preparation platform that analyzes resumes, provides ATS-style feedback, generates role-targeted improvements, and conducts AI-powered mock interviews with detailed answer evaluation and performance analytics.
+
+The platform supports resume parsing, job description matching, interview simulation, AI-generated feedback, interview scoring, and persistent interview sessions using modern full-stack web technologies.
 
 The application allows users to upload PDF or DOCX resumes and receive structured AI-generated feedback including:
 
@@ -59,6 +61,18 @@ Supports multiple career targets including:
 * IT Support Specialist
 * Custom user-defined roles
 
+## AI Mock Interview System
+
+- AI-generated interview questions
+- Behavioral, technical, and project-based interviews
+- Role-specific interview generation
+- AI answer evaluation and scoring
+- Communication and technical depth analysis
+- Improved answer suggestions
+- Interview performance dashboard
+- Persistent interview sessions
+- Question-by-question feedback review
+
 ## Modern UI/UX
 
 * Responsive design
@@ -70,35 +84,16 @@ Supports multiple career targets including:
 
 ---
 
-# Technologies Used
+## Tech Stack
 
-## Frontend
-
-* Next.js 16
-* React
-* TypeScript
-* Tailwind CSS
-
-## Backend
-
-* Next.js API Routes
-* OpenAI API
-
-## File Parsing
-
-* pdfreader
-* mammoth
-
-## Deployment
-
-* Vercel
-
-## Development Tools
-
-* Git
-* GitHub
-* VS Code
-* npm
+| Category | Technologies |
+|---|---|
+| Frontend | Next.js, React, TypeScript, Tailwind CSS |
+| Backend | Next.js API Routes |
+| AI | OpenAI API |
+| File Parsing | pdfreader, mammoth |
+| Deployment | Vercel |
+| Tooling | Git, GitHub, VS Code |
 
 ---
 
@@ -272,13 +267,8 @@ Planned enhancements include:
 
 This project was created to explore:
 
-* Full-stack AI application development
-* Large language model integration
-* Resume and ATS optimization workflows
-* Modern React and Next.js development
-* AI-powered structured data generation
-* User-centered UI/UX design
+## Project Goals
 
-The project also demonstrates how AI can be integrated into practical career-focused tools that provide actionable feedback rather than generic text generation.
+This project was built to explore production-style AI application development using modern full-stack technologies and large language models. The platform demonstrates how AI can power practical career preparation workflows including resume optimization, ATS analysis, interview simulation, and structured feedback generation.
 
 ---
