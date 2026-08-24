@@ -4,15 +4,26 @@ type ReadStorageOptions = {
     removeInvalid?: boolean;
 };
 
-// Browser storage is unavailable during server rendering, so callers receive null.
-function getLocalStorage(): Storage | null {
+// Session storage is unavailable during server rendering, so callers receive null.
+function getSessionStorage(): Storage | null {
     if (typeof window === "undefined") return null;
 
-    return window.localStorage;
+    return window.sessionStorage;
+}
+
+// Remove values saved by older releases that used persistent localStorage.
+function removeLegacyPersistentValue(key: string): void {
+    if (typeof window === "undefined") return;
+
+    try {
+        window.localStorage.removeItem(key);
+    } catch {
+        // Storage access can be blocked by browser privacy settings.
+    }
 }
 
 /**
- * Reads JSON from localStorage and validates it before returning typed data.
+ * Reads JSON from sessionStorage and validates it before returning typed data.
  * Malformed or outdated values are removed by default so they cannot break the UI.
  */
 export function readStorage<T>(
@@ -20,7 +31,8 @@ export function readStorage<T>(
     schema: z.ZodType<T>,
     { removeInvalid = true }: ReadStorageOptions = {}
 ): T | null {
-    const storage = getLocalStorage();
+    removeLegacyPersistentValue(key);
+    const storage = getSessionStorage();
 
     if (!storage) return null;
 
@@ -49,7 +61,8 @@ export function readStorage<T>(
 
 /** Serializes a value safely and reports whether persistence succeeded. */
 export function writeStorage<T>(key: string, value: T): boolean {
-    const storage = getLocalStorage();
+    removeLegacyPersistentValue(key);
+    const storage = getSessionStorage();
 
     if (!storage) return false;
 
@@ -63,5 +76,6 @@ export function writeStorage<T>(key: string, value: T): boolean {
 
 /** Removes one application value without affecting unrelated browser storage. */
 export function removeStorage(key: string): void {
-    getLocalStorage()?.removeItem(key);
+    removeLegacyPersistentValue(key);
+    getSessionStorage()?.removeItem(key);
 }

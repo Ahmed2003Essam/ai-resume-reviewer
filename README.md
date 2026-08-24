@@ -78,7 +78,7 @@ src/
     ├── openai.ts                  # Lazy server-side OpenAI client
     ├── prompts.ts                 # Resume-review prompt
     ├── schemas.ts                 # Shared Zod schemas and inferred types
-    └── storage.ts                 # Validated localStorage helpers
+    └── storage.ts                 # Validated sessionStorage helpers
 ```
 
 Client components retain state and request orchestration. Focused presentation
@@ -108,7 +108,7 @@ responses rather than being trusted by the UI.
 ## Browser Session Persistence
 
 Resume review input/results, mock interview input, and interview sessions are stored
-in `localStorage`. Every read is parsed and validated with Zod. Missing, malformed,
+in `sessionStorage`. Every read is parsed and validated with Zod. Missing, malformed,
 or outdated values return `null` and are removed safely.
 
 Interview persistence records:
@@ -121,8 +121,8 @@ Interview persistence records:
 Refreshing restores the correct question, answer, and feedback. Restarting an
 interview clears only the interview-session entry.
 
-Browser storage is local to one browser profile and is not a substitute for
-authenticated, server-side persistence.
+Session storage survives refreshes in the current tab but is cleared when that tab's
+page session ends. It is not a substitute for authenticated, server-side persistence.
 
 ## Error and Rate-Limit Handling
 
