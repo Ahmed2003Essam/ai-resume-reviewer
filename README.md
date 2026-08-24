@@ -22,6 +22,38 @@ system or hiring algorithm.
 - Accessible inline error messages and retryable generation failures
 - Responsive Tailwind CSS interface
 
+## Sample Results
+
+A completed resume review includes an overall score, five category scores,
+job-match insights, focused suggestions, and rewritten bullet points. For example:
+
+```json
+{
+  "overallScore": 75,
+  "categories": [
+    {
+      "name": "Impact",
+      "score": 15,
+      "feedback": "The resume demonstrates relevant project experience.",
+      "suggestions": [
+        "Add measurable outcomes to project descriptions."
+      ]
+    }
+  ],
+  "improvedBullets": [
+    "Built a TypeScript application that reduced processing time by 30%."
+  ]
+}
+```
+
+The mock interview also provides an overall answer score, communication and
+technical-depth scores, actionable feedback, and an improved answer example.
+
+> Sample results are representative. Actual results vary by resume, target role,
+> job description, and model response. AI-generated scores are intended for
+> educational and career-preparation use, not as an employer's ATS score or hiring
+> decision.
+
 ## Architecture
 
 The application uses the Next.js App Router and keeps server and browser concerns
