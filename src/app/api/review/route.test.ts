@@ -1,0 +1,133 @@
+import OpenAI from "openai";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { categoryNames, INPUT_LIMITS } from "@/lib/schemas";
+
+const { parseMock } = vi.hoisted(() => ({
+    parseMock: vi.fn(),
+}));
+
+vi.mock("@/lib/openai", () => ({
+    getOpenAIClient: () => ({
+        chat: {
+            completions: {
+                parse: parseMock,
+            },
+        },
+    }),
+}));
+
+import { POST } from "./route";
+
+const validReview = {
+    overallScore: 75,
+    matchAnalysis: null,
+    categories: categoryNames.map((name) => ({
+        name,
+        score: 15,
+        feedback: `${name} feedback`,
+        suggestions: [`Improve ${name}`],
+    })),
+    positionSuggestions: [],
+    improvedBullets: ["Improved a resume bullet with measurable impact."],
+};
+
+function createRequest(body: unknown) {
+    return new Request("http://localhost/api/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
+}
+
+function mockCompletion(parsed: unknown, refusal: string | null = null) {
+    parseMock.mockResolvedValue({
+        choices: [{ message: { parsed, refusal } }],
+    });
+}
+
+describe("POST /api/review", () => {
+    beforeEach(() => {
+        parseMock.mockReset();
+    });
+
+    it("returns 400 when resume text is missing", async () => {
+        const response = await POST(createRequest({}));
+
+        expect(response.status).toBe(400);
+        expect(parseMock).not.toHaveBeenCalled();
+    });
+
+    it("returns 400 for oversized resume input", async () => {
+        const response = await POST(
+            createRequest({ resumeText: "x".repeat(INPUT_LIMITS.resumeText + 1) })
+        );
+
+        expect(response.status).toBe(400);
+        expect(parseMock).not.toHaveBeenCalled();
+    });
+
+    it("returns 200 for a valid structured review", async () => {
+        mockCompletion(validReview);
+
+        const response = await POST(
+            createRequest({
+                resumeText: "Experienced engineer with measurable project impact.",
+                targetRole: "Software Engineer",
+            })
+        );
+        const body = await response.json();
+
+        expect(response.status).toBe(200);
+        expect(body.overallScore).toBe(75);
+        expect(body.categories).toHaveLength(5);
+    });
+
+    it("returns 502 when parsed model output is missing", async () => {
+        mockCompletion(null);
+
+        const response = await POST(
+            createRequest({ resumeText: "Experienced engineer." })
+        );
+
+        expect(response.status).toBe(502);
+    });
+
+    it("returns 502 for an inconsistent structured review", async () => {
+        mockCompletion({ ...validReview, overallScore: 74 });
+
+        const response = await POST(
+            createRequest({ resumeText: "Experienced engineer." })
+        );
+
+        expect(response.status).toBe(502);
+    });
+
+    it("returns 502 when the model refuses the request", async () => {
+        mockCompletion(null, "I cannot process this request.");
+
+        const response = await POST(
+            createRequest({ resumeText: "Experienced engineer." })
+        );
+        const body = await response.json();
+
+        expect(response.status).toBe(502);
+        expect(body.code).toBe("AI_REFUSAL");
+    });
+
+    it("returns 429 when OpenAI rate-limits the request", async () => {
+        parseMock.mockRejectedValue(
+            new OpenAI.RateLimitError(
+                429,
+                { code: "rate_limit_exceeded" },
+                "Rate limited",
+                new Headers()
+            )
+        );
+
+        const response = await POST(
+            createRequest({ resumeText: "Experienced engineer." })
+        );
+
+        expect(response.status).toBe(429);
+    });
+});

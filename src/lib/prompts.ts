@@ -1,3 +1,4 @@
+/** Builds the role-aware instructions used to produce a structured resume review. */
 export function resumeReviewPrompt(
   resumeText: string,
   jobDescription?: string,

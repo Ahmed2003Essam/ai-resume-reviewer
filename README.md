@@ -1,270 +1,176 @@
 # AI Resume Reviewer & Mock Interview Platform
 
-AI Resume Reviewer & Mock Interview Platform is a full-stack AI-powered career preparation platform that analyzes resumes, provides ATS-style feedback, generates role-targeted improvements, and conducts AI-powered mock interviews with detailed answer evaluation and performance analytics.
+A polished Next.js and TypeScript code sample for AI-assisted resume feedback and
+mock interview practice. Users can upload a PDF or DOCX resume, request a
+role-targeted review, and complete an eight-question interview with structured
+answer feedback.
 
-The platform supports resume parsing, job description matching, interview simulation, AI-generated feedback, interview scoring, and persistent interview sessions using modern full-stack web technologies.
+The scores in this project are AI-assisted estimates for practice and educational
+use. They do not reproduce or claim to represent any employer's applicant tracking
+system or hiring algorithm.
 
-The application allows users to upload PDF or DOCX resumes and receive structured AI-generated feedback including:
+## Features
 
-* Overall resume scoring
-* Category-based evaluation
-* Position-specific analysis
-* ATS-style job matching
-* Resume bullet improvements
-* Missing skills and keyword analysis
-* Role-targeted recommendations
+- PDF and DOCX resume text extraction
+- General or job-description-targeted resume feedback
+- Five-category resume scoring and position-level suggestions
+- Missing-keyword and strong-match analysis
+- Copyable rewritten resume bullets
+- Three behavioral, three technical, and two project interview questions
+- Structured answer scoring, feedback, and improved-answer examples
+- Refresh-safe browser persistence for active and completed interviews
+- Accessible inline error messages and retryable generation failures
+- Responsive Tailwind CSS interface
 
-The project was designed to simulate features commonly found in modern resume optimization and applicant tracking system (ATS) platforms while showcasing full-stack AI integration using modern web technologies.
+## Architecture
 
----
+The application uses the Next.js App Router and keeps server and browser concerns
+separate:
 
-# Live Demo
-
-[Live Application](https://ai-resume-reviewer-dusky.vercel.app/)
-
----
-
-# Features
-
-## Resume Upload
-
-* Upload resumes in PDF or DOCX format
-* Drag-and-drop upload interface
-* Animated upload and parsing states
-* Automatic text extraction
-
-## AI Resume Analysis
-
-* Overall resume scoring (0–100)
-* Category-based scoring system
-* Position-specific feedback
-* Improved bullet point generation
-* Resume clarity and formatting evaluation
-
-## ATS-Style Job Matching
-
-* Match score against job descriptions
-* Missing keyword detection
-* Strong skill alignment analysis
-* Target role evaluation
-
-## Role Targeting
-
-Supports multiple career targets including:
-
-* Software Engineer
-* Data Analyst
-* Data Scientist
-* Machine Learning Engineer
-* Cybersecurity Analyst
-* Product Manager
-* IT Support Specialist
-* Custom user-defined roles
-
-## AI Mock Interview System
-
-- AI-generated interview questions
-- Behavioral, technical, and project-based interviews
-- Role-specific interview generation
-- AI answer evaluation and scoring
-- Communication and technical depth analysis
-- Improved answer suggestions
-- Interview performance dashboard
-- Persistent interview sessions
-- Question-by-question feedback review
-
-## Modern UI/UX
-
-* Responsive design
-* Drag-and-drop uploads
-* Dynamic score bars
-* Copy-to-clipboard functionality
-* Clean dashboard layout
-* Real-time feedback display
-
----
-
-## Tech Stack
-
-| Category | Technologies |
-|---|---|
-| Frontend | Next.js, React, TypeScript, Tailwind CSS |
-| Backend | Next.js API Routes |
-| AI | OpenAI API |
-| File Parsing | pdfreader, mammoth |
-| Deployment | Vercel |
-| Tooling | Git, GitHub, VS Code |
-
----
-
-# How It Works
-
-## 1. Resume Upload
-
-The user uploads a PDF or DOCX resume using the drag-and-drop interface.
-
-## 2. Resume Parsing
-
-The backend extracts text from the uploaded file:
-
-* PDF files are parsed using `pdfreader`
-* DOCX files are parsed using `mammoth`
-
-## 3. AI Processing
-
-The extracted resume text is sent to the OpenAI API along with:
-
-* Optional job description
-* Selected target role
-
-The AI model analyzes:
-
-* Resume quality
-* Impact
-* Metrics
-* Relevance
-* Formatting
-* ATS compatibility
-* Position-specific content
-
-## 4. Structured JSON Response
-
-The OpenAI API returns structured JSON containing:
-
-* Overall score
-* Category evaluations
-* Match analysis
-* Position suggestions
-* Improved bullets
-
-## 5. Frontend Rendering
-
-The application dynamically renders:
-
-* Score bars
-* Feedback cards
-* Improved bullets
-* Copy buttons
-* Match analysis
-
----
-
-# Scoring System
-
-The application evaluates resumes across multiple categories:
-
-| Category   | Description                                             |
-| ---------- | ------------------------------------------------------- |
-| Impact     | Measures demonstrated contributions and achievements    |
-| Clarity    | Evaluates readability and communication quality         |
-| Metrics    | Detects quantified achievements and measurable results  |
-| Relevance  | Measures alignment with target role and job description |
-| Formatting | Evaluates consistency and presentation                  |
-
-The overall score is calculated as the sum of all category scores.
-
----
-
-# Project Structure
-
-```bash
+```text
 src/
-│
 ├── app/
 │   ├── api/
-│   │   ├── parse/
-│   │   └── review/
-│   ├── layout.tsx
-│   ├── page.tsx
-│   └── icon.png
-│
-├── lib/
-│   └── prompts.ts
+│   │   ├── parse/                 # PDF/DOCX extraction
+│   │   ├── review/                # Structured resume review
+│   │   └── interview/
+│   │       ├── generate/          # Structured question generation
+│   │       └── score/             # Structured answer evaluation
+│   ├── HomeClient.tsx             # Resume state and request orchestration
+│   └── interview/InterviewClient.tsx
+├── components/
+│   ├── ErrorMessage.tsx
+│   ├── resume/                    # Resume form and result presentation
+│   └── interview/                 # Interview question and report presentation
+└── lib/
+    ├── openai.ts                  # Lazy server-side OpenAI client
+    ├── prompts.ts                 # Resume-review prompt
+    ├── schemas.ts                 # Shared Zod schemas and inferred types
+    └── storage.ts                 # Validated localStorage helpers
 ```
 
----
+Client components retain state and request orchestration. Focused presentation
+components receive typed props and callbacks. API routes validate requests before
+calling OpenAI and validate application-level invariants before returning data.
 
-# Running Locally
+## Runtime Validation and Structured Outputs
 
-## 1. Clone the Repository
+Zod provides a shared contract across API routes, React components, tests, and
+browser storage. Validation includes:
 
-```bash
-git clone https://github.com/Ahmed2003Essam/ai-resume-reviewer
-cd ai-resume-reviewer
-```
+- Input size limits and required request fields
+- Exactly five named resume categories
+- Category and overall score ranges
+- Overall score consistency with category totals
+- Unique interview question IDs and question text
+- Exact 3/3/2 interview-question composition
+- Answer-feedback score ranges
+- Consistent interview-session index and completion state
 
-## 2. Install Dependencies
+The OpenAI routes use the SDK's `zodResponseFormat` helper with
+`chat.completions.parse()`. Model-facing schemas contain only Structured
+Outputs-compatible Zod objects. Application-only refinements run after parsing.
+Missing parsed output, refusals, and inconsistent results return clear `502`
+responses rather than being trusted by the UI.
+
+## Browser Session Persistence
+
+Resume review input/results, mock interview input, and interview sessions are stored
+in `localStorage`. Every read is parsed and validated with Zod. Missing, malformed,
+or outdated values return `null` and are removed safely.
+
+Interview persistence records:
+
+- Generated questions immediately after successful generation
+- Each submitted answer and its feedback atomically
+- The current question index
+- Completion status
+
+Refreshing restores the correct question, answer, and feedback. Restarting an
+interview clears only the interview-session entry.
+
+Browser storage is local to one browser profile and is not a substitute for
+authenticated, server-side persistence.
+
+## Error and Rate-Limit Handling
+
+API responses use stable error codes, human-readable messages, and a `retryable`
+flag. Routes distinguish invalid input, missing configuration, model refusals,
+invalid model output, provider rate limits, and temporary provider outages. OpenAI
+request IDs are logged server-side when available.
+
+Provider rate limits return HTTP `429`, but this sample does not implement a shared
+distributed rate limiter. A production multi-user deployment should add
+identity-aware throttling, abuse prevention, monitoring, and centralized logs.
+
+## Local Development
+
+Requirements:
+
+- Node.js 20 or newer
+- npm
+- An OpenAI API key for live AI requests
+
+Install dependencies and start the application:
 
 ```bash
 npm install
-```
-
-## 3. Create Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-```env
-OPENAI_API_KEY=your_openai_api_key
-```
-
-## 4. Start Development Server
-
-```bash
 npm run dev
 ```
 
-Open:
+Configure `OPENAI_API_KEY` in the local Next.js environment before making live
+review or interview requests. Open <http://localhost:3000> in a browser.
 
-```text
-http://localhost:3000
+## Quality Commands
+
+```bash
+npm run lint       # ESLint
+npm test           # Vitest unit and mocked API-route tests
+npm run build      # Production build and TypeScript validation
+npm run test:e2e   # Playwright mocked browser workflow
 ```
 
----
+Install Playwright's Chromium runtime once before the first end-to-end run:
 
-# Deployment
+```bash
+npx playwright install chromium
+```
 
-The application is deployed using Vercel.
+## Testing
 
-## Deploy Steps
+Vitest covers schema refinements and all OpenAI-backed API routes. The OpenAI client
+is mocked, so tests do not require secrets, call the provider, or consume credits.
+Coverage includes invalid and oversized input, valid structured responses, missing
+or inconsistent output, refusals, rate limits, and interview composition.
 
-1. Push project to GitHub
-2. Import repository into Vercel
-3. Add environment variables:
+The Playwright test mocks the application's API routes and verifies the browser
+workflow from resume entry through rendered feedback and generated interview
+questions.
 
-   * `OPENAI_API_KEY`
-4. Deploy
+GitHub Actions runs on pushes and pull requests with Node.js 20:
 
----
+```text
+npm ci → npm run lint → npm test → npm run build
+```
 
-# Example Use Cases
+## Technology
 
-* Resume optimization for internships and jobs
-* ATS preparation
-* Role-specific resume targeting
-* Resume improvement suggestions
-* Skill gap analysis
-* Technical portfolio project
+- Next.js 16 and React 19
+- TypeScript
+- Tailwind CSS
+- OpenAI JavaScript SDK
+- Zod
+- `pdfreader` and `mammoth`
+- Vitest
+- Playwright
 
----
+## Current Limitations
 
-# Future Improvements
+- No user accounts, database, or cross-device history
+- No distributed application-level rate limiter
+- AI feedback can be incomplete or inaccurate and should be reviewed critically
+- PDF extraction quality depends on the source document; scanned PDFs need OCR,
+  which is outside this sample's scope
+- Resume and interview content is sent to the configured AI provider for processing
 
-Planned enhancements include:
-
-* User authentication
-* Saved review history
-* Resume export functionality
-* PDF report generation
-* Resume template generation
-* Inline resume editing
-* AI-generated cover letters
-* Multi-language support
-* Advanced ATS keyword analytics
-
----
-
-# Project Goals
-
-This project was built to explore production-style AI application development using modern full-stack technologies and large language models. The platform demonstrates how AI can power practical career preparation workflows including resume optimization, ATS analysis, interview simulation, and structured feedback generation.
-
----
+These boundaries keep the repository focused as a clear, reviewable MLH code sample.

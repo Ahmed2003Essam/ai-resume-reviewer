@@ -4,6 +4,7 @@ import mammoth from "mammoth";
 
 export const runtime = "nodejs";
 
+/** Collects text items from each PDF page into one normalized resume string. */
 function parsePdf(buffer: Buffer): Promise<string> {
     return new Promise((resolve, reject) => {
         let text = "";
@@ -20,6 +21,7 @@ function parsePdf(buffer: Buffer): Promise<string> {
     });
 }
 
+/** Extracts plain text from an uploaded PDF or DOCX resume. */
 export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
